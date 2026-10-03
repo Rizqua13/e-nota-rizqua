@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>e-Nota Rizqua v55</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Poppins', Arial, sans-serif; margin: 0; padding: 8px; background-color: #eaeded; color: #000; }
+        .app-container { max-width: 320px; width: 100%; margin: auto; background: #ffffff; padding: 12px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.15); }
+        .logo-header { border: 1px solid #000; padding: 4px; text-align: center; background: #fff; margin-bottom: 8px; border-radius: 4px; min-height: 60px; display: flex; align-items: center; justify-content: center; }
+        .logo-header img { max-width: 100%; max-height: 90px; height: auto; display: block; margin: auto; object-fit: contain; }
+        .btn-upload { display: block; width: 100%; background-color: #007bff; color: white; border: none; padding: 8px; font-size: 12px; font-weight: bold; border-radius: 4px; cursor: pointer; text-align: center; margin-bottom: 8px; }
+        .address-box { border: 1px dashed #000; padding: 8px; font-size: 11px; text-align: center; background: #fff; margin-bottom: 8px; border-radius: 4px; outline: none; word-break: break-word; line-height: 1.4; }
+        .section-header { display: flex; justify-content: space-between; align-items: center; background: #000; color: #fff; padding: 6px 8px; font-weight: bold; font-size: 11px; margin-bottom: 8px; border-radius: 4px; }
+        .date-box { display: flex; align-items: center; gap: 3px; font-size: 11px; }
+        .date-box input { padding: 3px; font-size: 11px; border: 1px solid #ccc; border-radius: 3px; width: 75px; text-align: center; font-family: 'Poppins', Arial, sans-serif; }
+        .btn-today { background: #e0e0e0; color: #000; border: none; padding: 3px 6px; font-size: 10px; border-radius: 3px; font-weight: bold; cursor: pointer; }
+        .product-card { border: 1px dashed #999; padding: 8px; margin-bottom: 8px; border-radius: 6px; background: #fff; position: relative; }
+        .product-row-top { display: flex; gap: 6px; margin-bottom: 6px; }
+        .product-name-input { flex: 1; width: 0; padding: 6px; font-size: 12px; font-weight: bold; border: 1px solid #ccc; border-radius: 4px; text-transform: uppercase; font-family: 'Poppins', Arial, sans-serif; }
+        .btn-delete { background-color: #e74c3c; color: white; border: none; padding: 0 10px; font-weight: bold; border-radius: 4px; cursor: pointer; font-size: 13px; }
+        .product-row-bottom { display: flex; gap: 4px; align-items: center; font-size: 11px; }
+        .qty-input { width: 42px; padding: 5px 3px; text-align: center; border: 1px solid #ccc; border-radius: 4px; font-size: 11px; font-family: 'Poppins', Arial, sans-serif; }
+        .unit-select { padding: 5px 3px; border: 1px solid #ccc; border-radius: 4px; background: #fff; font-size: 10px; max-width: 80px; font-family: 'Poppins', Arial, sans-serif; }
+        .price-input { flex: 1; width: 0; padding: 5px 6px; text-align: right; border: 1px solid #ccc; border-radius: 4px; font-size: 11px; font-family: 'Poppins', Arial, sans-serif; }
+        .subtotal-text { font-weight: bold; font-size: 12px; min-width: 62px; text-align: right; white-space: nowrap; }
+        .btn-disc { background: #e0e0e0; border: none; padding: 4px 8px; font-size: 10px; border-radius: 3px; cursor: pointer; margin-top: 6px; }
+        .disc-section { margin-top: 6px; display: flex; gap: 6px; align-items: center; }
+        .btn-remove-disc { background-color: #f39c12; color: white; border: none; padding: 4px 8px; font-size: 10px; border-radius: 3px; cursor: pointer; white-space: nowrap; }
+        .disc-input { flex: 1; width: 0; padding: 4px 6px; font-size: 11px; border: 1px solid #ccc; border-radius: 3px; font-family: 'Poppins', Arial, sans-serif; }
+        .btn-add-product { display: block; width: 100%; background-color: #007bff; color: white; border: none; padding: 10px; font-size: 12px; font-weight: bold; border-radius: 5px; cursor: pointer; text-align: center; margin-top: 8px; margin-bottom: 8px; }
+        .footer-note { border: 1px dashed #000; padding: 8px; font-size: 10px; text-align: center; background: #fff; margin-bottom: 10px; border-radius: 4px; outline: none; word-break: break-word; line-height: 1.4; }
+        .total-container { border-top: 2px dashed #000; border-bottom: 2px dashed #000; padding: 10px 6px; display: flex; justify-content: space-between; align-items: center; font-size: 15px; font-weight: bold; background: #fff; margin-bottom: 12px; }
+        .bt-status { background: #f8d7da; color: #721c24; padding: 8px; font-size: 11px; text-align: center; border-radius: 4px; margin-bottom: 8px; font-weight: bold; border: 1px solid #f5c6cb; }
+        .bt-status.connected { background: #d4edda; color: #155724; border-color: #c3e6cb; }
+        .btn-bt { display: block; width: 100%; background-color: #007bff; color: white; border: none; padding: 12px; font-size: 13px; font-weight: bold; border-radius: 5px; cursor: pointer; text-align: center; margin-bottom: 8px; }
+        .btn-print-action { display: block; width: 100%; background-color: #27ae60; color: white; border: none; padding: 14px; font-size: 14px; font-weight: bold; border-radius: 5px; cursor: pointer; text-align: center; margin-bottom: 8px; box-shadow: 0 2px 4px rgba(39, 174, 96, 0.3); }
+        .btn-share { display: block; width: 100%; background-color: #e67e22; color: white; border: none; padding: 12px; font-size: 13px; font-weight: bold; border-radius: 5px; cursor: pointer; text-align: center; margin-bottom: 8px; }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="logo-header">
+            <img id="logoImg" src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAP//////////////////////////////////////////////////////////////////////////////////////wgALCAABAAEBAREA/8QAFBABAAAAAAAAAAAAAAAAAAAAAP/aAAgBAQABPxA=" alt="Logo Rizqua Invoice">
+        </div>
+        <div>
+            <button class="btn-upload" onclick="document.getElementById('logoFile').click()">📁 Ganti / Upload Logo Lain</button>
+            <input type="file" id="logoFile" style="display:none" accept="image/*" onchange="loadLogo(event)">
+        </div>
+        <div class="address-box" contenteditable="true">
+            Kp. Sukasenang, RT.03/RW.10, Desa Cibunar<br>
+            Kec. Cibatu, Kab Garut<br>
+            WA : 089663716854
+        </div>
+        <div class="section-header">
+            <span>RINCIAN PRODUK</span>
+            <div class="date-box">
+                <span>TGL:</span>
+                <input type="text" id="notaDate" value="03/10/2026">
+                <button class="btn-today" onclick="setCurrentDate()">Hari ini</button>
+            </div>
+        </div>
+        <div id="productList">
+            <div class="product-card" data-id="1">
+                <div class="product-row-top">
+                    <input type="text" class="product-name-input" value="TEH PUCUK">
+                    <button class="btn-delete" onclick="removeProduct(this)">X</button>
+                </div>
+                <div class="product-row-bottom">
+                    <input type="number" class="qty-input" value="1" min="1" oninput="calculateTotal()">
+                    <select class="unit-select" onchange="calculateTotal()">
+                        <option value="DUS" selected>DUS</option>
+                        <option value="PACK">PACK</option>
+                        <option value="KRAT">KRAT</option>
+                        <option value="BOTOL">BOTOL</option>
+                        <option value="1/2 DUS">1/2 DUS</option>
+                        <option value="GALON">GALON</option>
+                        <option value="PCS">PCS</option>
+                    </select>
+                    <span>x</span>
+                    <input type="number" class="price-input" value="61000" oninput="calculateTotal()">
+                    <span class="subtotal-text">61.000</span>
+                </div>
+                <div class="disc-wrapper">
+                    <button class="btn-disc" onclick="toggleDisc(this)">+ Diskon</button>
+                </div>
+            </div>
+        </div>
+        <button class="btn-add-product" onclick="addProduct()">+ Tambah Produk</button>
+        <div class="footer-note" contenteditable="true">
+            Terima Kasih Sudah Order, Di tunggu Orderan Berikutnya!<br>
+            Melayani Pesan Antar [Delivery]
+        </div>
+        <div class="total-container">
+            <span>TOTAL</span>
+            <span id="grandTotal">61.000</span>
+        </div>
+        <div>
+            <div id="btStatus" class="bt-status">Status Bluetooth: Siap Cetak</div>
+            <button class="btn-bt" onclick="connectBluetooth()">📶 Sambungkan ke Printer Bluetooth</button>
+            <button class="btn-print-action" onclick="printDirect()">⚡ CETAK LANGSUNG (WEB BLUETOOTH)</button>
+            <button class="btn-share" onclick="shareReceiptImage()">📤 Simpan & Kirim Gambar Struk</button>
+        </div>
+    </div>
+
+    <script>
+        window.onload = function() { 
+            setCurrentDate(); 
+            calculateTotal(); 
+        };
+
+        function setCurrentDate() {
+            const now = new Date();
+            const dd = String(now.getDate()).padStart(2, '0');
+            const mm = String(now.getMonth() + 1).padStart(2, '0');
+            const yy = String(now.getFullYear()).slice(-2);
+            document.getElementById('notaDate').value = dd + '/' + mm + '/' + yy;
+        }
+
+        function formatIDR(num) { return num.toLocaleString('id-ID'); }
+
+        function calculateTotal() {
+            let cards = document.querySelectorAll('.product-card');
+            let grandTotal = 0;
+            cards.forEach(card => {
+                let qty = parseFloat(card.querySelector('.qty-input').value) || 0;
+                let price = parseFloat(card.querySelector('.price-input').value) || 0;
+                let subtotal = qty * price;
+                let discInput = card.querySelector('.disc-input');
+                if (discInput) {
+                    let discVal = parseFloat(discInput.value.replace(/[^0-9]/g, '')) || 0;
+                    subtotal -= discVal;
+                }
+                if (subtotal < 0) subtotal = 0;
+                card.querySelector('.subtotal-text').textContent = formatIDR(subtotal);
+                grandTotal += subtotal;
+            });
+            document.getElementById('grandTotal').textContent = formatIDR(grandTotal);
+        }
+
+        function removeProduct(btn) {
+            let cards = document.querySelectorAll('.product-card');
+            if (cards.length <= 1) {
+                alert('Minimal harus ada 1 produk!');
+                return;
+            }
+            btn.closest('.product-card').remove();
+            calculateTotal();
+        }
+
+        function addProduct() {
+            let list = document.getElementById('productList');
+            let div = document.createElement('div');
+            div.className = 'product-card';
+            div.innerHTML = '<div class="product-row-top"><input type="text" class="product-name-input" value="PRODUK BARU"><button class="btn-delete" onclick="removeProduct(this)">X</button></div>' +
+                            '<div class="product-row-bottom">' +
+                            '<input type="number" class="qty-input" value="1" min="1" oninput="calculateTotal()">' +
+                            '<select class="unit-select" onchange="calculateTotal()">' +
+                            '<option value="DUS">DUS</option><option value="PACK">PACK</option><option value="KRAT">KRAT</option><option value="BOTOL">BOTOL</option><option value="1/2 DUS">1/2 DUS</option><option value="GALON">GALON</option><option value="PCS" selected>PCS</option>' +
+                            '</select><span>x</span>' +
+                            '<input type="number" class="price-input" value="10000" oninput="calculateTotal()">' +
+                            '<span class="subtotal-text">10.000</span></div>' +
+                            '<div class="disc-wrapper"><button class="btn-disc" onclick="toggleDisc(this)">+ Diskon</button></div>';
+            list.appendChild(div);
+            calculateTotal();
+        }
+
+        function toggleDisc(btn) {
+            let wrapper = btn.closest('.disc-wrapper');
+            wrapper.innerHTML = '<div class="disc-section"><button class="btn-remove-disc" onclick="removeDisc(this)">Hapus Diskon</button><input type="text" class="disc-input" value="DISC 1000" oninput="calculateTotal()"></div>';
+            calculateTotal();
+        }
+
+        function removeDisc(btn) {
+            let wrapper = btn.closest('.disc-wrapper');
+            wrapper.innerHTML = '<button class="btn-disc" onclick="toggleDisc(this)">+ Diskon</button>';
+            calculateTotal();
+        }
+
+        function loadLogo(event) {
+            let reader = new FileReader();
+            reader.onload = function() {
+                document.getElementById('logoImg').src = reader.result;
+            }
+            if(event.target.files && event.target.files[0]) {
+                reader.readAsDataURL(event.target.files[0]);
+            }
+        }
+
+        let bluetoothDevice = null, bluetoothServer = null, printerCharacteristic = null, useWriteWithoutResponse = false;
+        
+        async function connectBluetooth() {
+            if (!navigator.bluetooth || typeof navigator.bluetooth.requestDevice !== 'function') {
+                alert('Aplikasi pembungkus APK ini tidak mendukung Web Bluetooth (navigator.bluetooth undefined).\n\nSaran: Buka file ini langsung melalui Google Chrome di HP Anda, atau gunakan tombol "Simpan & Kirim Gambar Struk" untuk mencetak lewat aplikasi printer thermal eksternal (seperti RawBT).');
+                return;
+            }
+            try {
+                const statusEl = document.getElementById('btStatus');
+                statusEl.textContent = 'Mencari Printer Bluetooth...';
+                
+                bluetoothDevice = await navigator.bluetooth.requestDevice({
+                    acceptAllDevices: true,
+                    optionalServices: ['000018f0-0000-1000-8000-00805f9b34fb', '0000de00-0000-1000-8000-00805f9b34fb', '49535343-fe7d-4ae5-8fa9-9fafd205e455', 'e7810a71-73ae-499d-8c15-faa9aef0c3f2', '0000ff00-0000-1000-8000-00805f9b34fb']
+                });
+
+                bluetoothServer = await bluetoothDevice.gatt.connect();
+                const services = await bluetoothServer.getPrimaryServices();
+                for (let service of services) {
+                    try {
+                        const chars = await service.getCharacteristics();
+                        for (let c of chars) {
+                            if (c.properties.writeWithoutResponse) {
+                                printerCharacteristic = c;
+                                useWriteWithoutResponse = true;
+                                break;
+                            } else if (c.properties.write) {
+                                printerCharacteristic = c;
+                                useWriteWithoutResponse = false;
+                                break;
+                            }
+                        }
+                    } catch(e) {}
+                    if (printerCharacteristic) break;
+                }
+                statusEl.textContent = 'Status Bluetooth: Terhubung ke ' + (bluetoothDevice.name || 'Printer');
+                statusEl.classList.add('connected');
+                alert('Printer Bluetooth berhasil terhubung!');
+            } catch (error) {
+                document.getElementById('btStatus').textContent = 'Status Bluetooth: Gagal / Dibatalkan';
+                alert('Gagal menghubungkan Bluetooth: ' + error.message);
+            }
+        }
+
+        function getImagePrintBytes(imgElement) {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            const maxWidth = 384; 
+            let imgWidth = imgElement.naturalWidth || imgElement.width || 200;
+            let imgHeight = imgElement.naturalHeight || imgElement.height || 100;
+            let targetWidth = maxWidth;
+            let targetHeight = Math.floor((imgHeight * targetWidth) / imgWidth);
+            targetHeight = Math.ceil(targetHeight / 8) * 8;
+            canvas.width = targetWidth;
+            canvas.height = targetHeight;
+            ctx.fillStyle = '#FFFFFF';
+            ctx.fillRect(0, 0, targetWidth, targetHeight);
+            ctx.drawImage(imgElement, 0, 0, targetWidth, targetHeight);
+            const imgData = ctx.getImageData(0, 0, targetWidth, targetHeight);
+            const pixels = imgData.data;
+            const bytesPerLine = targetWidth / 8;
+            const dataBytes = [];
+            for (let y = 0; y < targetHeight; y++) {
+                for (let x = 0; x < bytesPerLine; x++) {
+                    let byte = 0;
+                    for (let b = 0; b < 8; b++) {
+                        const px = x * 8 + b;
+                        const idx = (y * targetWidth + px) * 4;
+                        const avg = (pixels[idx] + pixels[idx+1] + pixels[idx+2]) / 3;
+                        if (avg < 160) { byte |= (1 << (7 - b)); }
+                    }
+                    dataBytes.push(byte);
+                }
+            }
+            const xL = bytesPerLine & 0xFF;
+            const xH = (bytesPerLine >> 8) & 0xFF;
+            const yL = targetHeight & 0xFF;
+            const yH = (targetHeight >> 8) & 0xFF;
+            return [0x1D, 0x76, 0x30, 0x00, xL, xH, yL, yH, ...dataBytes];
+        }
+
+        function wrapTextLines(ctx, text, maxWidth) {
+            let lines = [];
+            let paragraphs = text.split('\n');
+            paragraphs.forEach(para => {
+                let words = para.trim().split(' ');
+                let currentLine = '';
+                words.forEach(word => {
+                    let testLine = currentLine ? currentLine + ' ' + word : word;
+                    let metrics = ctx.measureText(testLine);
+                    if (metrics.width > maxWidth && currentLine) {
+                        lines.push(currentLine);
+                        currentLine = word;
+                    } else {
+                        currentLine = testLine;
+                    }
+                });
+                if (currentLine) {
+                    lines.push(currentLine);
+                }
+            });
+            return lines;
+        }
+
+        async function generateReceiptCanvas() {
+            return new Promise((resolve) => {
+                const canvas = document.createElement('canvas');
+                const width = 384; 
+                canvas.width = width;
+                const ctx = canvas.getContext('2d');
+                
+                let itemsCount = document.querySelectorAll('.product-card').length;
+                let estHeight = 550 + (itemsCount * 120);
+                canvas.height = estHeight;
+
+                ctx.fillStyle = '#FFFFFF';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = '#000000';
+                ctx.textBaseline = 'top';
+
+                let currentY = 15;
+                const logoImg = document.getElementById('logoImg');
+
+                let drawNext = () => {
+                    if (logoImg && logoImg.src) {
+                        try {
+                            let imgW = logoImg.naturalWidth || 200;
+                            let imgH = logoImg.naturalHeight || 80;
+                            let drawW = 376;
+                            let drawH = Math.floor((imgH * drawW) / imgW);
+                            let drawX = (width - drawW) / 2;
+                            ctx.drawImage(logoImg, drawX, currentY, drawW, drawH);
+                            currentY += drawH + 16;
+                        } catch(e) {}
+                    }
+
+                    ctx.font = '20px "Poppins", Arial, sans-serif';
+                    ctx.textAlign = 'center';
+                    let addressEl = document.querySelector('.address-box');
+                    let addressRawText = addressEl ? addressEl.innerText : '';
+                    let addressLines = wrapTextLines(ctx, addressRawText, 360);
+                    
+                    addressLines.forEach(line => {
+                        ctx.fillText(line, width / 2, currentY);
+                        currentY += 28;
+                    });
+                    
+                    currentY += 8;
+                    ctx.fillText('------------------------------------------------', width / 2, currentY);
+                    currentY += 24;
+
+                    ctx.textAlign = 'left';
+                    let dateInput = document.getElementById('notaDate');
+                    let dateStr = dateInput ? dateInput.value : '03/10/2026';
+                    ctx.fillText("TGL: " + dateStr, 12, currentY);
+                    currentY += 32;
+                    
+                    ctx.textAlign = 'center';
+                    ctx.fillText('------------------------------------------------', width / 2, currentY);
+                    currentY += 24;
+
+                    document.querySelectorAll('.product-card').forEach(card => {
+                        let nameInput = card.querySelector('.product-name-input');
+                        let qtyInput = card.querySelector('.qty-input');
+                        let unitSelect = card.querySelector('.unit-select');
+                        let priceInput = card.querySelector('.price-input');
+                        let subtotalEl = card.querySelector('.subtotal-text');
+
+                        let name = nameInput ? nameInput.value.trim() : '';
+                        let qty = qtyInput ? qtyInput.value : '1';
+                        let unit = unitSelect ? unitSelect.value : 'PCS';
+                        let price = priceInput ? priceInput.value : '0';
+                        let subtotal = subtotalEl ? subtotalEl.textContent : '0';
+
+                        ctx.font = 'bold 22px "Poppins", Arial, sans-serif';
+                        ctx.textAlign = 'left';
+                        let nameLines = wrapTextLines(ctx, name, 360);
+                        nameLines.forEach(nLine => {
+                            ctx.fillText(nLine, 12, currentY);
+                            currentY += 32;
+                        });
+
+                        ctx.font = '20px "Poppins", Arial, sans-serif';
+                        let leftInfo = qty + " " + unit + " x " + formatIDR(parseFloat(price)||0);
+                        ctx.textAlign = 'left';
+                        ctx.fillText(leftInfo, 12, currentY);
+                        
+                        ctx.textAlign = 'right';
+                        ctx.fillText(subtotal, width - 12, currentY);
+                        currentY += 34;
+
+                        let discInput = card.querySelector('.disc-input');
+                        if (discInput && discInput.value.trim() !== '') {
+                            ctx.textAlign = 'left';
+                            ctx.fillText("  " + discInput.value.trim(), 18, currentY);
+                            currentY += 28;
+                        }
+                    });
+
+                    ctx.textAlign = 'center';
+                    ctx.fillText('------------------------------------------------', width / 2, currentY);
+                    currentY += 26;
+
+                    ctx.font = 'bold 26px "Poppins", Arial, sans-serif';
+                    let grandTotalEl = document.getElementById('grandTotal');
+                    let grandTotal = grandTotalEl ? grandTotalEl.textContent : '0';
+                    ctx.textAlign = 'left';
+                    ctx.fillText("TOTAL:", 12, currentY);
+                    ctx.textAlign = 'right';
+                    ctx.fillText(grandTotal, width - 12, currentY);
+                    currentY += 42;
+
+                    ctx.font = '20px "Poppins", Arial, sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('------------------------------------------------', width / 2, currentY);
+                    currentY += 24;
+
+                    let footerEl = document.querySelector('.footer-note');
+                    let footerRawText = footerEl ? footerEl.innerText : '';
+                    let footerLines = wrapTextLines(ctx, footerRawText, 360);
+
+                    footerLines.forEach(line => {
+                        ctx.fillText(line, width / 2, currentY);
+                        currentY += 28;
+                    });
+
+                    let finalCanvas = document.createElement('canvas');
+                    finalCanvas.width = width;
+                    let finalHeight = Math.ceil((currentY + 50) / 8) * 8;
+                    finalCanvas.height = finalHeight;
+                    let finalCtx = finalCanvas.getContext('2d');
+                    finalCtx.fillStyle = '#FFFFFF';
+                    finalCtx.fillRect(0, 0, width, finalHeight);
+                    finalCtx.drawImage(canvas, 0, 0);
+
+                    resolve(finalCanvas);
+                };
+
+                if (logoImg && logoImg.complete) {
+                    drawNext();
+                } else if (logoImg) {
+                    logoImg.onload = drawNext;
+                    logoImg.onerror = drawNext;
+                } else {
+                    drawNext();
+                }
+            });
+        }
+
+        async function printDirect() {
+            if (!navigator.bluetooth || typeof navigator.bluetooth.requestDevice !== 'function') {
+                alert('Web Bluetooth tidak didukung di aplikasi APK ini. Gunakan tombol "Simpan & Kirim Gambar Struk" untuk mencetak lewat aplikasi printer thermal eksternal.');
+                return;
+            }
+            if (!printerCharacteristic) { 
+                alert('Printer Bluetooth belum terhubung! Silakan klik tombol "Sambungkan ke Printer Bluetooth" terlebih dahulu.'); 
+                return; 
+            }
+            try {
+                let receiptCanvas = await generateReceiptCanvas();
+                let logoBytes = getImagePrintBytes(receiptCanvas);
+
+                let bytes = [];
+                bytes.push(0x1B, 0x40); // Init printer
+                bytes.push(0x1B, 0x61, 0x01); // Center align
+                bytes.push(...logoBytes); 
+                bytes.push(0x0A, 0x0A, 0x0A, 0x1D, 0x56, 0x42, 0x00); // Feed & Cut
+
+                for (let i = 0; i < bytes.length; i += 128) {
+                    let chunk = new Uint8Array(bytes.slice(i, i + 128));
+                    if (useWriteWithoutResponse) {
+                        await printerCharacteristic.writeValueWithoutResponse(chunk);
+                    } else {
+                        await printerCharacteristic.writeValue(chunk);
+                    }
+                    await new Promise(resolve => setTimeout(resolve, 20));
+                }
+                alert('Nota berhasil tercetak!');
+            } catch(err) {
+                alert('Gagal cetak langsung: ' + err.message);
+            }
+        }
+
+        // Alternative printing method that works 100% in any APK / WebView: Share image to printer app (RawBT, Bluetooth Print, WhatsApp, etc.)
+        async function shareReceiptImage() {
+            let receiptCanvas = await generateReceiptCanvas();
+            receiptCanvas.toBlob(async function(blob) {
+                const file = new File([blob], "nota_rizqua.png", { type: "image/png" });
+                const filesArray = [file];
+                
+                if (navigator.canShare && navigator.canShare({ files: filesArray })) {
+                    try {
+                        await navigator.share({
+                            files: filesArray,
+                            title: 'Nota Pembayaran',
+                            text: 'Struk Belanja Rizqua Invoice'
+                        });
+                    } catch (error) {
+                        if (error.name !== 'AbortError') {
+                            downloadCanvasAsImage(receiptCanvas);
+                        }
+                    }
+                } else {
+                    downloadCanvasAsImage(receiptCanvas);
+                }
+            }, 'image/png');
+        }
+
+        function downloadCanvasAsImage(canvas) {
+            let link = document.createElement('a');
+            link.download = 'nota_rizqua.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+            alert('Gambar nota berhasil disimpan! Anda bisa langsung mencetaknya menggunakan aplikasi printer thermal gratis (seperti RawBT atau Bluetooth Print) dari galeri HP Anda.');
+        }
+    </script>
+</body>
+</html>
